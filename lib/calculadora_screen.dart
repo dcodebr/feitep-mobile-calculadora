@@ -112,7 +112,20 @@ class _CalculadoraScreenState extends State<CalculadoraScreen> {
     return getBotao(
       descricao,
       () {
-        setState(() {});
+        setState(() {
+          if (operacao == "") {
+            operacao = descricao;
+            valor1 = double.parse(display);
+            display = "";
+          } else if (descricao == "=") {
+            calcular();
+          } else {
+            calcular();
+            valor1 = double.parse(display);
+            operacao = descricao;
+            display = "";
+          }
+        });
       },
       Colors.deepOrange,
       Colors.white,
@@ -160,5 +173,27 @@ class _CalculadoraScreenState extends State<CalculadoraScreen> {
     }
 
     return botaoNumerico;
+  }
+
+  void calcular() {
+    valor2 = double.parse(display);
+    switch (operacao) {
+      case "÷":
+        double resultado = valor1 / valor2;
+        display = resultado.toStringAsFixed(6);
+        break;
+      case "X":
+        double resultado = valor1 * valor2;
+        display = resultado.toStringAsFixed(6);
+        break;
+      case "+":
+        double resultado = valor1 + valor2;
+        display = resultado.toStringAsFixed(6);
+        break;
+      case "-":
+        double resultado = valor1 - valor2;
+        display = resultado.toStringAsFixed(6);
+        break;
+    }
   }
 }
