@@ -76,7 +76,7 @@ class _CalculadoraScreenState extends State<CalculadoraScreen> {
               children: [
                 Expanded(flex: 2, child: getBotaoNumerico("0")),
                 Expanded(child: getBotaoNumerico(",")),
-                Expanded(child: getBotaoOperacao("=", () {})),
+                Expanded(child: getBotaoOperacao("=")),
               ],
             ),
           ],
