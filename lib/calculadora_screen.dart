@@ -1,74 +1,86 @@
 import 'package:flutter/material.dart';
 
-class CalculadoraScreen extends StatelessWidget {
+class CalculadoraScreen extends StatefulWidget {
   const CalculadoraScreen({super.key});
 
   @override
+  State<CalculadoraScreen> createState() => _CalculadoraScreenState();
+}
+
+class _CalculadoraScreenState extends State<CalculadoraScreen> {
+  String display = "";
+  String operacao = "";
+  double valor1 = 0;
+  double valor2 = 0;
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10),
-      color: Colors.black,
-      child: Column(
-        children: [
-          SizedBox(height: 50),
-          SizedBox(
-            width: double.infinity,
-            child: Text(
-              "123456789",
-              textAlign: TextAlign.right,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 70,
-                fontFamily: "sans-serif-thin",
-                decoration: TextDecoration.none,
+    return SingleChildScrollView(
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        color: Colors.black,
+        child: Column(
+          children: [
+            SizedBox(height: 50),
+            SizedBox(
+              width: double.infinity,
+              child: Text(
+                display,
+                textAlign: TextAlign.right,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 70,
+                  fontFamily: "sans-serif-thin",
+                  decoration: TextDecoration.none,
+                ),
               ),
             ),
-          ),
-          SizedBox(height: 20),
-          Row(
-            children: [
-              Expanded(child: getBotaoDeAcao("AC", () {})),
-              Expanded(child: getBotaoDeAcao("+/-", () {})),
-              Expanded(child: getBotaoDeAcao("%", () {})),
-              Expanded(child: getBotaoOperacao("÷", () {})),
-            ],
-          ),
-          SizedBox(height: 15),
-          Row(
-            children: [
-              Expanded(child: getBotaoNumerico("7", () {})),
-              Expanded(child: getBotaoNumerico("8", () {})),
-              Expanded(child: getBotaoNumerico("9", () {})),
-              Expanded(child: getBotaoOperacao("X", () {})),
-            ],
-          ),
-          SizedBox(height: 15),
-          Row(
-            children: [
-              Expanded(child: getBotaoNumerico("4", () {})),
-              Expanded(child: getBotaoNumerico("5", () {})),
-              Expanded(child: getBotaoNumerico("6", () {})),
-              Expanded(child: getBotaoOperacao("+", () {})),
-            ],
-          ),
-          SizedBox(height: 15),
-          Row(
-            children: [
-              Expanded(child: getBotaoNumerico("1", () {})),
-              Expanded(child: getBotaoNumerico("2", () {})),
-              Expanded(child: getBotaoNumerico("3", () {})),
-              Expanded(child: getBotaoOperacao("-", () {})),
-            ],
-          ),
-          SizedBox(height: 15),
-          Row(
-            children: [
-              Expanded(flex: 2, child: getBotaoNumerico("0", () {})),
-              Expanded(child: getBotaoNumerico(",", () {})),
-              Expanded(child: getBotaoOperacao("=", () {})),
-            ],
-          ),
-        ],
+            SizedBox(height: 20),
+            Row(
+              children: [
+                Expanded(child: getBotaoDeAcao("AC", () {})),
+                Expanded(child: getBotaoDeAcao("+/-", () {})),
+                Expanded(child: getBotaoDeAcao("%", () {})),
+                Expanded(child: getBotaoOperacao("÷", () {})),
+              ],
+            ),
+            SizedBox(height: 15),
+            Row(
+              children: [
+                Expanded(child: getBotaoNumerico("7")),
+                Expanded(child: getBotaoNumerico("8")),
+                Expanded(child: getBotaoNumerico("9")),
+                Expanded(child: getBotaoOperacao("X", () {})),
+              ],
+            ),
+            SizedBox(height: 15),
+            Row(
+              children: [
+                Expanded(child: getBotaoNumerico("4")),
+                Expanded(child: getBotaoNumerico("5")),
+                Expanded(child: getBotaoNumerico("6")),
+                Expanded(child: getBotaoOperacao("+", () {})),
+              ],
+            ),
+            SizedBox(height: 15),
+            Row(
+              children: [
+                Expanded(child: getBotaoNumerico("1")),
+                Expanded(child: getBotaoNumerico("2")),
+                Expanded(child: getBotaoNumerico("3")),
+                Expanded(child: getBotaoOperacao("-", () {})),
+              ],
+            ),
+            SizedBox(height: 15),
+            Row(
+              children: [
+                Expanded(flex: 2, child: getBotaoNumerico("0")),
+                Expanded(child: getBotaoNumerico(",")),
+                Expanded(child: getBotaoOperacao("=", () {})),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -96,14 +108,25 @@ class CalculadoraScreen extends StatelessWidget {
     return getBotao(descricao, onPressed, Colors.green, Colors.white);
   }
 
-  Widget getBotaoOperacao(String descricao, void Function()? onPressed) {
-    return getBotao(descricao, onPressed, Colors.deepOrange, Colors.white);
+  Widget getBotaoOperacao(String descricao) {
+    return getBotao(
+      descricao,
+      () {
+        setState(() {});
+      },
+      Colors.deepOrange,
+      Colors.white,
+    );
   }
 
-  Widget getBotaoNumerico(String descricao, void Function()? onPressed) {
+  Widget getBotaoNumerico(String descricao) {
     var botaoNumerico = getBotao(
       descricao,
-      onPressed,
+      () {
+        setState(() {
+          display += descricao;
+        });
+      },
       Colors.blueAccent,
       Colors.white,
     );
@@ -112,7 +135,18 @@ class CalculadoraScreen extends StatelessWidget {
       botaoNumerico = SizedBox(
         height: 80,
         child: FloatingActionButton(
-          onPressed: onPressed,
+          onPressed: () {
+            setState(() {
+              if (display == "0") {
+                if (descricao != "0") {
+                  display = "";
+                  display = descricao;
+                }
+              } else if (display != "0") {
+                display += descricao;
+              }
+            });
+          },
           backgroundColor: Colors.blueAccent,
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
